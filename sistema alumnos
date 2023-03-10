@@ -1,0 +1,39 @@
+<?php
+//Conexión a la base de datos
+$host = "localhost";
+$user = "usuario";
+$password = "contraseña";
+$dbname = "nombre_de_la_base_de_datos";
+$conn = mysqli_connect($host, $user, $password, $dbname);
+
+//Verificación de la conexión
+if (!$conn) {
+    die("Conexión fallida: " . mysqli_connect_error());
+}
+
+//Función para mostrar mensajes de éxito o error
+function mostrarMensaje($mensaje, $tipo) {
+    $mensajeHtml = '<div class="alert alert-' . $tipo . '" role="alert">' . $mensaje . '</div>';
+    echo $mensajeHtml;
+}
+
+//Función para obtener los datos de un alumno o docente
+function obtenerDatosPersona($dni) {
+    global $conn;
+    $sql = "SELECT * FROM personas WHERE dni='" . $dni . "'";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row;
+    } else {
+        return false;
+    }
+}
+
+//Función para agregar un nuevo alumno o docente
+function agregarPersona($dni, $apellido, $nombres, $domicilio, $email, $telefono, $curso, $division, $fecha_nacimiento, $total_materias, $materias_aprobadas, $materias_pendientes) {
+    global $conn;
+    $sql = "INSERT INTO personas (dni, apellido, nombres, domicilio, email, telefono, curso, division, fecha_nacimiento, total_materias, materias_aprobadas, materias_pendientes)
+    VALUES ('" . $dni . "', '" . $apellido . "', '" . $nombres . "', '" . $domicilio . "', '" . $email . "', '" . $telefono . "', '" . $curso . "', '" . $division . "', '" . $fecha_nacimiento . "', " . $total_materias . ", " . $materias_aprobadas . ", " . $materias_pendientes . ")";
+    if (mysqli_query($conn, $sql)) {
+        mostrarMensaje("La persona ha sido agregada con é
